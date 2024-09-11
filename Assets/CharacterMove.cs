@@ -6,13 +6,19 @@ public class CharacterMove : MonoBehaviour
 {
     public float moveSpeed = 5f; //Karakterin hýzýný ayarlar
     public float lookSpeed = 2f; //Karakterin mouse göre dönme hýzýný ayarlar
-    public Transform playerCamera;
+    public float jumpForce = 5f; // Karakterin zýplama kuvvetini ayarlar
+    public Transform playerCamera; //Kamerayý ekleyeceðimiz alan oluþturuyor scriptin üzerine
 
     private float rotationX = 0f; //Mousun x eksenindeki haraketine göre
+    private Rigidbody rb; // Rigidbody referansý
+
+    private bool canJump = true; //Zýplayýp zýplamayacaðýný kontrol eden kod
+    private float jumpCooldown = 1f; //Zýplama için gereken süre
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked; //mouseun kitlenmesini ve gizlenmesini saðlýyor
+        rb = GetComponent<Rigidbody>(); // Rigidbody bileþenini al
     }
 
     void Update()
@@ -31,5 +37,29 @@ public class CharacterMove : MonoBehaviour
         rotationX -= mouseY;
         rotationX = Mathf.Clamp(rotationX, -90, 90);
         playerCamera.localEulerAngles = new Vector3(rotationX, 0f, 0f);
+
+        //Zýplama kontrolü
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded() && canJump) 
+        {
+            Jump();
+        }
+    }
+
+    private void Jump()
+    {
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        canJump = false;
+        StartCoroutine(JumpCooldown());
+    }
+
+    private bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position, Vector3.down, 1.1f);
+    }
+
+    private IEnumerator JumpCooldown()
+    {
+        yield return new WaitForSeconds(jumpCooldown);
+        canJump = true;
     }
 }
