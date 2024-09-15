@@ -3633,9 +3633,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0a178e8ae764da4e86b51af88764a3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 6.06
-  deceleration: 6.03
-  backwardMultiplier: 6
+  acceleration: 2
+  deceleration: 2
+  backwardMultiplier: 2
 --- !u!4 &1473980395 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4131435082325336, guid: b97f4fc4776ca5b43bbcf11e72cc4ada, type: 3}

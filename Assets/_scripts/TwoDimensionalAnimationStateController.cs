@@ -55,6 +55,16 @@ public class TwoDimensionalAnimationStateController : MonoBehaviour
             velocityZ += Time.deltaTime * acceleration * backwardMultiplier;
         }
 
+        if (!backPressed && velocityZ < 0.0f)
+        {
+            velocityZ -= Time.deltaTime * deceleration * backwardMultiplier;
+        }
+
+        if (!backPressed && velocityZ > 0.0f)
+        {
+            velocityZ = 0.0f;
+        }
+
         // velocityZ animasyon hızını azalt 
         if (!forwardPressed && velocityZ > 0.0f)
         {
