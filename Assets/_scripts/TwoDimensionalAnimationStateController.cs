@@ -11,6 +11,8 @@ public class TwoDimensionalAnimationStateController : MonoBehaviour
     private float acceleration = 2.0f;
     [SerializeField]
     private float deceleration = 2.0f;
+    [SerializeField]
+    private float backwardMultiplier = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -50,16 +52,8 @@ public class TwoDimensionalAnimationStateController : MonoBehaviour
         // geriye doğru artar 
         if (backPressed && velocityZ > -0.5f && !runPressed)
         {
-            velocityZ += Time.deltaTime * acceleration;
+            velocityZ += Time.deltaTime * acceleration * backwardMultiplier;
         }
-        
-        
-        // geriye gitmiyorsa hızını azaltma BOT OLMAZSA İŞARETİ DEĞİŞTİR
-        //if (!backPressed && velocityZ > 0.0f)
-        //{
-        //    velocityZ += Time.deltaTime * deceleration;
-        //}
-       
 
         // velocityZ animasyon hızını azalt 
         if (!forwardPressed && velocityZ > 0.0f)

@@ -3635,6 +3635,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   acceleration: 6.06
   deceleration: 6.03
+  backwardMultiplier: 6
 --- !u!4 &1473980395 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4131435082325336, guid: b97f4fc4776ca5b43bbcf11e72cc4ada, type: 3}
