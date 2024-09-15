@@ -3449,6 +3449,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Chr_Prince_01
       objectReference: {fileID: 0}
+    - target: {fileID: 4098858218790072, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 4960878925533176, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
       propertyPath: m_LocalPosition.x
       value: -12.795914
@@ -3534,6 +3538,10 @@ PrefabInstance:
       value: -0.009
       objectReference: {fileID: 0}
     - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
       propertyPath: moveSpeed
       value: 3
       objectReference: {fileID: 0}
@@ -3571,6 +3579,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1890929502950978, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1468062961}
+    - targetCorrespondingSourceObject: {fileID: 1890929502950978, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1468062965}
   m_SourcePrefab: {fileID: 100100000, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
 --- !u!4 &1468062955 stripped
 Transform:
@@ -3605,11 +3616,25 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 127229903}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: febd6ea7d8e906b4f9ba01b828aacb49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1468062965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127229903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0a178e8ae764da4e86b51af88764a3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  acceleration: 6.06
+  deceleration: 6.03
 --- !u!4 &1473980395 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4131435082325336, guid: b97f4fc4776ca5b43bbcf11e72cc4ada, type: 3}
