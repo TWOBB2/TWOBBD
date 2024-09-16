@@ -3616,8 +3616,16 @@ PrefabInstance:
       value: -0.009
       objectReference: {fileID: 0}
     - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
+      propertyPath: Camera
+      value: 
+      objectReference: {fileID: 200438922}
+    - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
+      propertyPath: _speed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
       propertyPath: _canMove
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
       propertyPath: _animator
@@ -3625,7 +3633,7 @@ PrefabInstance:
       objectReference: {fileID: 1468062960}
     - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
       propertyPath: _runSpeed
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
       propertyPath: m_Enabled
@@ -3644,12 +3652,24 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
+      propertyPath: _CameraSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
       propertyPath: playerCamera
       value: 
-      objectReference: {fileID: 200438922}
+      objectReference: {fileID: 2051686628}
+    - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
+      propertyPath: turnSmoothTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
       propertyPath: mouseSensitivity
       value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
+      propertyPath: _MouseSensitivity
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
       propertyPath: _mouseSensitivity
@@ -4034,7 +4054,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 1468062955}
   m_Lens:
-    FieldOfView: 60.000004
+    FieldOfView: 70
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -4514,7 +4534,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
