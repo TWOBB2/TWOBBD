@@ -1,69 +1,112 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CharacterMove : MonoBehaviour
 {
-    public float moveSpeed = 5f; // Karakterin normal hýzýný ayarlar
-    public float sprintSpeed = 10f; // Karakterin koþma hýzýný ayarlar
-    public float lookSpeed = 2f; // Karakterin mouse'a göre dönme hýzýný ayarlar
-    public float jumpForce = 5f; // Karakterin zýplama kuvvetini ayarlar
-    public Transform playerCamera; // Kamerayý ekleyeceðimiz alan oluþturuyor scriptin üzerine
+    [SerializeField] bool _canMove = false;
+    [SerializeField] float _speed = 3f;
+    [SerializeField] float _runSpeed = 6f;
+    [SerializeField] CharacterController _characterController;
+    [SerializeField] Animator _animator;
+    public Transform playerCamera;
 
-    private float rotationX = 0f; // Mousun x eksenindeki hareketine göre
-    private Rigidbody rb; // Rigidbody referansý
+    public Vector3 velocity;
 
-    private bool canJump = true; // Zýplayýp zýplamayacaðýný kontrol eden kod
-    private float jumpCooldown = 1f; // Zýplama için gereken süre
 
-    void Start()
+    public float gravity = -9.81f;
+
+    GameInputActions _input;
+    Vector3 _movementDirection; // Karakterin hangi yöne hareket edeceðini temsil eden vektör
+    bool _isRunning = false;
+
+    private void Update()
     {
-        Cursor.lockState = CursorLockMode.Locked; // Mouse'un kitlenmesini ve gizlenmesini saðlýyor
-        rb = GetComponent<Rigidbody>(); // Rigidbody bileþenini al
+
+
+        // Yerçekimi uygulamasý
+        velocity.y += gravity * Time.deltaTime;
+        _characterController.Move(velocity * Time.deltaTime);
     }
 
-    void Update()
+    private void Start()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal"); // "a" "d" yönler için
-        float moveVertical = Input.GetAxis("Vertical");
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 
-        // Koþma kontrolü
-        float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : moveSpeed; // Eðer sol shift tuþuna basýlýrsa koþma hýzýný kullan
+    void OnValidate()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
 
-        Vector3 movement = (transform.right * moveHorizontal + transform.forward * moveVertical).normalized;
-        transform.position += movement * currentSpeed * Time.deltaTime;
-
-        float mouseX = Input.GetAxis("Mouse X") * lookSpeed;
-        float mouseY = Input.GetAxis("Mouse Y") * lookSpeed;
-
-        transform.Rotate(0, mouseX, 0);
-
-        rotationX -= mouseY;
-        rotationX = Mathf.Clamp(rotationX, -90, 90);
-        playerCamera.localEulerAngles = new Vector3(rotationX, 0f, 0f);
-
-        // Zýplama kontrolü
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded() && canJump)
+        if (_characterController == null)
         {
-            Jump();
+            _characterController = GetComponent<CharacterController>();
+        } 
+
+       if (_animator == null)
+        {
+            _animator = GetComponent<Animator>();
         }
     }
 
-    private void Jump()
+    void Awake()
     {
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        canJump = false;
-        StartCoroutine(JumpCooldown());
+        _input = new GameInputActions();
     }
 
-    private bool IsGrounded()
+    void OnEnable()
     {
-        return Physics.Raycast(transform.position, Vector3.down, 1.1f);
+        _input.Player.Move.performed += HandleOnMovement;
+        _input.Player.Move.canceled += HandleOnMovement;
+        _input.Player.Run.performed += HandleOnRun; // Shift tuþuna basýldýðýnda
+        _input.Player.Run.canceled += HandleOnRun;  // Shift tuþu býrakýldýðýnda
+
+        _input.Enable();
     }
 
-    private IEnumerator JumpCooldown()
+    void OnDisable()
     {
-        yield return new WaitForSeconds(jumpCooldown);
-        canJump = true;
+        _input.Player.Move.performed -= HandleOnMovement;
+        _input.Player.Move.canceled -= HandleOnMovement;
+        _input.Player.Run.performed -= HandleOnRun;
+        _input.Player.Run.canceled -= HandleOnRun;
+
+        _input.Disable();
     }
+
+    void FixedUpdate()
+    {
+        if (!_canMove) return;
+
+        // Eðer koþma tuþuna basýlmýþsa koþma hýzýný, basýlmamýþsa yürüme hýzýný kullan
+        float currentSpeed = _isRunning ? _runSpeed : _speed;
+        _characterController.Move(Time.deltaTime * currentSpeed * _movementDirection);
+    }
+
+    void LateUpdate()
+    {
+        _animator.SetFloat("speed", _movementDirection.magnitude);
+
+        // `isRunning` parametresini animator'a gönderiyoruz
+        _animator.SetBool("isRunning", _isRunning);
+
+        // Blend Tree için X ve Y hýz deðerleri
+        _animator.SetFloat("Velocity X", _movementDirection.x, 0.1f, Time.deltaTime);
+        _animator.SetFloat("Velocity Y", _movementDirection.z, 0.1f, Time.deltaTime);
+    }
+
+    private void HandleOnMovement(InputAction.CallbackContext context)
+    {
+        Vector2 direction = context.ReadValue<Vector2>();
+        _movementDirection = new Vector3(direction.x, y: 0f, z: direction.y);
+    }
+
+    private void HandleOnRun(InputAction.CallbackContext context)
+    {
+        _isRunning = context.ReadValueAsButton();
+    }
+
 }
