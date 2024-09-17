@@ -10,22 +10,24 @@ public class CharacterMove : MonoBehaviour
     [SerializeField] bool _canMove = false;
     [SerializeField] float _speed = 3f;
     [SerializeField] float _runSpeed = 6f;
+    [SerializeField] float _crouchSpeed = 1.5f; // Eðilme hýzý
     [SerializeField] CharacterController _characterController;
     [SerializeField] Animator _animator;
     public Transform playerCamera;
-
+    public Transform cameraHolder; // Kamera tutucu, karakterin kafa pozisyonuna baðlý
     public float _CameraSpeed = 5f;
     public float _MouseSensitivity = 10f;
     float xRotation = 0f;
-
-
     public Vector3 velocity;
-
     public float gravity = -9.81f;
-
     GameInputActions _input;
     Vector3 _movementDirection; // Karakterin hangi yöne hareket edeceðini temsil eden vektör
     bool _isRunning = false;
+    bool _isCrouch = false;
+    Vector3 _originalCameraPosition; // Orijinal kamera pozisyonu
+    float _originalHeight; // Orijinal karakter yüksekliði
+    public float crouchHeight = 1f; // Eðilme sýrasýnda karakterin yeni yüksekliði
+    public float crouchCameraOffset = 0.5f; // Eðilme sýrasýnda kameranýn aþaðý kayma miktarý
 
     void OnValidate()
     {
@@ -45,6 +47,8 @@ public class CharacterMove : MonoBehaviour
     void Awake()
     {
         _input = new GameInputActions();
+        _originalHeight = _characterController.height; // Orijinal yüksekliði kaydet
+        _originalCameraPosition = cameraHolder.localPosition; // Kameranýn baþlangýç pozisyonunu kaydet
     }
 
     void OnEnable()
@@ -53,6 +57,8 @@ public class CharacterMove : MonoBehaviour
         _input.Player.Move.canceled += HandleOnMovement;
         _input.Player.Run.performed += HandleOnRun; // Shift tuþuna basýldýðýnda
         _input.Player.Run.canceled += HandleOnRun;  // Shift tuþu býrakýldýðýnda
+        _input.Player.Crouch.performed += HandleOnCrouch; // CTRL tuþuna basýldýðýnda
+        _input.Player.Crouch.canceled += HandleOnCrouch;  // CTRL tuþu býrakýldýðýnda
 
         _input.Enable();
     }
@@ -63,6 +69,8 @@ public class CharacterMove : MonoBehaviour
         _input.Player.Move.canceled -= HandleOnMovement;
         _input.Player.Run.performed -= HandleOnRun;
         _input.Player.Run.canceled -= HandleOnRun;
+        _input.Player.Crouch.performed -= HandleOnCrouch; // CTRL tuþuna basýldýðýnda
+        _input.Player.Crouch.canceled -= HandleOnCrouch;  // CTRL tuþu býrakýldýðýnda
 
         _input.Disable();
     }
@@ -71,8 +79,8 @@ public class CharacterMove : MonoBehaviour
     {
  if (!_canMove) return;
 
-        // Eðer koþma tuþuna basýlmýþsa koþma hýzýný, basýlmamýþsa yürüme hýzýný kullan
-        float currentSpeed = _isRunning ? _runSpeed : _speed;
+        // Hangi hýzýn kullanýlacaðýný belirle (normal, koþma veya eðilme)
+        float currentSpeed = _isCrouch ? _crouchSpeed : (_isRunning ? _runSpeed : _speed);
 
         // Hareket yönünü kameraya göre hesapla (yalnýzca yatay düzlemde, Y ekseni sýfýrlanmýþ)
         Vector3 forward = playerCamera.transform.forward;
@@ -109,12 +117,16 @@ public class CharacterMove : MonoBehaviour
 
         // `isRunning` parametresini animator'a gönderiyoruz
         _animator.SetBool("isRunning", _isRunning);
+        _animator.SetBool("isCrouch", _isCrouch);
 
         // Blend Tree için X ve Y hýz deðerleri
         _animator.SetFloat("Velocity X", _movementDirection.x, 0.1f, Time.deltaTime);
         _animator.SetFloat("Velocity Y", _movementDirection.z, 0.1f, Time.deltaTime);
 
         MouseLook();
+
+        // Kamera pozisyonunu eðilme durumuna göre ayarla
+        UpdateCameraPosition();
     }
 
     private void MouseLook()
@@ -137,9 +149,58 @@ public class CharacterMove : MonoBehaviour
         _movementDirection = new Vector3(direction.x, y: 0f, z: direction.y);
     }
 
+    #region KONÞMA 
+
     private void HandleOnRun(InputAction.CallbackContext context)
     {
+        // Eðer eðiliyorsa koþmayý engelle
+        if (_isCrouch)
+        {
+            _isRunning = false;
+            return;
+        }
+
         _isRunning = context.ReadValueAsButton();
+
     }
 
+    #endregion
+
+    private void HandleOnCrouch(InputAction.CallbackContext context)
+    {
+        _isCrouch = context.ReadValueAsButton();
+
+
+        // Eðer koþuyorsa eðilmeyi engelle
+        if (_isRunning)
+        {
+            _isCrouch = false;
+            return;
+        }
+
+        // Eðilme durumuna göre karakterin yüksekliðini ve merkezini ayarla
+        if (_isCrouch)
+        {
+            _characterController.height = crouchHeight; // Karakterin yüksekliðini düþür
+            _characterController.center = new Vector3(0, crouchHeight / 2f, 0); // Yüksekliðe göre merkezini ayarla
+        }
+        else
+        {
+            _characterController.height = _originalHeight; // Eski yüksekliðe geri dön
+            _characterController.center = new Vector3(0, _originalHeight / 2f, 0); // Merkezini eski haline getir
+        }
+    }
+
+    private void UpdateCameraPosition()
+    {
+        if (_isCrouch)
+        {
+            // Eðildiðinde kamera aþaðý ve ileri gider
+            cameraHolder.localPosition = _originalCameraPosition - new Vector3(0, crouchCameraOffset, -0.21f); // Z ekseninde de ileriye kaydýrýyoruz
+        }
+        else
+        {
+            cameraHolder.localPosition = _originalCameraPosition; // Eski pozisyona geri dön
+        }
+    }
 }
