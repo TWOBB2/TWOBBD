@@ -10,24 +10,24 @@ public class CharacterMove : MonoBehaviour
     [SerializeField] bool _canMove = false;
     [SerializeField] float _speed = 3f;
     [SerializeField] float _runSpeed = 6f;
-    [SerializeField] float _crouchSpeed = 1.5f; // Eðilme hýzý
+    [SerializeField] float _crouchSpeed = 1.5f;
     [SerializeField] CharacterController _characterController;
     [SerializeField] Animator _animator;
     public Transform playerCamera;
-    public Transform cameraHolder; // Kamera tutucu, karakterin kafa pozisyonuna baðlý
+    public Transform cameraHolder;
     public float _CameraSpeed = 5f;
     public float _MouseSensitivity = 10f;
     float xRotation = 0f;
     public Vector3 velocity;
     public float gravity = -9.81f;
     GameInputActions _input;
-    Vector3 _movementDirection; // Karakterin hangi yöne hareket edeceðini temsil eden vektör
+    Vector3 _movementDirection;
     bool _isRunning = false;
     bool _isCrouch = false;
-    Vector3 _originalCameraPosition; // Orijinal kamera pozisyonu
-    float _originalHeight; // Orijinal karakter yüksekliði
-    public float crouchHeight = 1f; // Eðilme sýrasýnda karakterin yeni yüksekliði
-    public float crouchCameraOffset = 0.5f; // Eðilme sýrasýnda kameranýn aþaðý kayma miktarý
+    Vector3 _originalCameraPosition;
+    float _originalHeight;
+    public float crouchHeight = 1f;
+    public float crouchCameraOffset = 0.5f;
 
     void OnValidate()
     {

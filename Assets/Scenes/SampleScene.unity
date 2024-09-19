@@ -3281,6 +3281,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 64644533267369424, guid: ca862114f8bfd7043a8dbfbdc0ef206f, type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3461,6 +3465,18 @@ PrefabInstance:
     - target: {fileID: 4960878925533176, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3758845767700296376, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
+      propertyPath: m_Height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3758845767700296376, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
+      propertyPath: m_Radius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3758845767700296376, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
+      propertyPath: m_SlopeLimit
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 5275161739122280721, guid: a8884fa09da891440a328b0212cd9ad4, type: 3}
       propertyPath: _crouchSpeed
@@ -4256,7 +4272,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 70
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -4283,7 +4299,7 @@ Transform:
   m_GameObject: {fileID: 2051686624}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.025837481, z: 0, w: -0.99966615}
-  m_LocalPosition: {x: -79.05856, y: 1.6700116, z: 493.29736}
+  m_LocalPosition: {x: -79.39935, y: 1.6410117, z: 495.1314}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
