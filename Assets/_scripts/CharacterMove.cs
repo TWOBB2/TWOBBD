@@ -77,7 +77,7 @@ public class CharacterMove : MonoBehaviour
 
     void FixedUpdate()
     {
- if (!_canMove) return;
+     if (!_canMove) return;
 
         // Hangi hýzýn kullanýlacaðýný belirle (normal, koþma veya eðilme)
         float currentSpeed = _isCrouch ? _crouchSpeed : (_isRunning ? _runSpeed : _speed);
@@ -170,11 +170,17 @@ public class CharacterMove : MonoBehaviour
     {
         _isCrouch = context.ReadValueAsButton();
 
-
         // Eðer koþuyorsa eðilmeyi engelle
         if (_isRunning)
         {
             _isCrouch = false;
+            return;
+        }
+
+        // Eðer eðilme durumundan kalkmaya çalýþýyorsa ve yukarýda engel varsa kalkmayý engelle
+        if (!_isCrouch && IsObstacleAbove())
+        {
+            _isCrouch = true; // Kalkma iþlemini iptal et
             return;
         }
 
@@ -189,6 +195,14 @@ public class CharacterMove : MonoBehaviour
             _characterController.height = _originalHeight; // Eski yüksekliðe geri dön
             _characterController.center = new Vector3(0, _originalHeight / 2f, 0); // Merkezini eski haline getir
         }
+    }
+
+    // Karakterin baþýnýn üstünde bir engel olup olmadýðýný kontrol eden fonksiyon
+    private bool IsObstacleAbove()
+    {
+        // Ray'i yukarý doðru atýyoruz, yarýçapý karakterin yarý geniþliði kadar
+        float rayDistance = _originalHeight - crouchHeight;
+        return Physics.SphereCast(transform.position, _characterController.radius, Vector3.up, out RaycastHit hit, rayDistance);
     }
 
     private void UpdateCameraPosition()
