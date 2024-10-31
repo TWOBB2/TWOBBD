@@ -1,49 +1,26 @@
-using Cinemachine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraSwitcher : MonoBehaviour
 {
-    public CinemachineVirtualCamera VCAMFACE; // Ýlk sanal kamera
-    public CinemachineVirtualCamera VCAM3RDP; // Ýkinci sanal kamera
+    public Camera mainCamera; // Kamerayý burada atayýn
+    public GameObject objectA; // 1. GameObject
+    public GameObject objectB; // 2. GameObject
 
-    private void Start()
-    {
-        // Ýlk baþta, ilk kamerayý aktif yap
-        ActivateCamera(VCAMFACE);
-    }
+    private bool isObjectAActive = true; // Hangi GameObject'in aktif olduðunu takip et
+    public float transitionSpeed = 1.0f; // Geçiþ hýzý
 
-    private void Update()
+    void Update()
     {
-        // Örnek: Boþluk tuþuna basýldýðýnda kameralar arasýnda geçiþ yap
+        // Tab tuþuna basýldýðýnda geçiþ yap
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (VCAMFACE.Priority > VCAM3RDP.Priority)
-            {
-                ActivateCamera(VCAM3RDP);
-            }
-            else
-            {
-                ActivateCamera(VCAMFACE);
-            }
-        }
-    }
-
-    private void ActivateCamera(CinemachineVirtualCamera cameraToActivate)
-    {
-        // Geçiþ yapmak istediðiniz kameranýn önceliðini yüksek yapýn
-        cameraToActivate.Priority = 10;
-
-        // Diðer kameralarýn önceliðini düþük yapýn
-        if (cameraToActivate != VCAMFACE)
-        {
-            VCAMFACE.Priority = 5;
+            isObjectAActive = !isObjectAActive; // Aktif GameObject'i deðiþtir
         }
 
-        if (cameraToActivate != VCAM3RDP)
-        {
-            VCAM3RDP.Priority = 5;
-        }
+        // Geçiþ yapacak GameObject'in konumunu hesapla
+        Vector3 targetPosition = isObjectAActive ? objectA.transform.position : objectB.transform.position;
+
+        // Kamerayý smooth bir þekilde geçiþ yapacak þekilde hareket ettir
+        mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, targetPosition, transitionSpeed * Time.deltaTime);
     }
 }
